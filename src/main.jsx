@@ -5,41 +5,50 @@ import ReactDOM from 'react-dom/client'
 const BACKEND_URL = "https://collab-code-l8gz.onrender.com";
 
 // FUNCTION: Save code to MongoDB
-export const saveCodeToCloud = async (roomID, codeContent) => {
+const saveTest = async () => {
   try {
+    console.log("⏳ Sending data to Render...");
     const response = await fetch(`${BACKEND_URL}/api/save`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        roomID,
-        codeContent,
+        roomID: "test-room-123",
+        codeContent: "console.log('Database Connection Success!');",
         language: "javascript" 
       })
     });
-    console.log("Status: Code saved to MongoDB");
+    const result = await response.json();
+    console.log("✅ Success! Database says:", result);
+    alert("Data saved to MongoDB!");
   } catch (err) {
-    console.error("Cloud Save Error:", err);
+    console.error("❌ Cloud Save Error:", err);
+    alert("Save failed. Check console (F12).");
   }
 };
 
-// FUNCTION: Load code from MongoDB
-export const loadCodeFromCloud = async (roomID) => {
-  try {
-    const response = await fetch(`${BACKEND_URL}/api/load/${roomID}`);
-    const data = await response.json();
-    return data ? data.codeContent : "";
-  } catch (err) {
-    console.error("Cloud Load Error:", err);
-    return "";
-  }
-};
-
-// Start the app
+// Start the app with a Test Button
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <div style={{color: 'white', textAlign: 'center', marginTop: '50px'}}>
-      <h1>Backend Connected!</h1>
-      <p>Check the console (F12) to see database activity.</p>
+    <div style={{color: 'white', textAlign: 'center', marginTop: '50px', fontFamily: 'sans-serif'}}>
+      <h1 style={{color: '#61dafb'}}>🚀 Full-Stack Connected!</h1>
+      <p>Click the button below to test your MongoDB connection.</p>
+      
+      <button 
+        onClick={saveTest}
+        style={{
+          padding: '15px 30px', 
+          fontSize: '18px', 
+          cursor: 'pointer', 
+          backgroundColor: '#61dafb', 
+          border: 'none', 
+          borderRadius: '5px',
+          fontWeight: 'bold'
+        }}
+      >
+        Test Database Save
+      </button>
+
+      <p style={{marginTop: '20px', color: '#888'}}>Open Console (F12) to see the logs.</p>
     </div>
   </React.StrictMode>
 )
